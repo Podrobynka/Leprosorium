@@ -9,6 +9,22 @@ end
 
 before do
   init_db
+  # @db.results_as_hash = true
+  # @posts = @db.execute 'select * from posts order by id desc'
+end
+
+configure do
+  init_db
+
+  @db.execute %(
+    CREATE TABLE IF NOT EXISTS
+    "posts"
+    (
+      "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+      "created_date" DATE,
+      "content" TEXT
+    )
+  )
 end
 
 get '/' do
