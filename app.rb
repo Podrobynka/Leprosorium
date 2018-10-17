@@ -59,3 +59,16 @@ get '/details/:post_id' do
   @row = results[0]
   erb :details
 end
+
+post '/details/:post_id' do
+  post_id = params[:post_id]
+  comment = params[:comment]
+
+  # @db.execute %(
+  #   insert into
+  #   posts (created_date, comment)
+  #   values (datetime(), ?)
+  #   ), comment
+
+  erb "You typed comment #{comment} for post #{post_id}"
+end
