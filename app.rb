@@ -25,6 +25,17 @@ configure do
       "content" TEXT
     )
   )
+
+  @db.execute %(
+    CREATE TABLE IF NOT EXISTS
+    "comments"
+    (
+      "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+      "created_date" DATE,
+      "comment" TEXT,
+      "post_id" INTEGER
+    )
+  )
 end
 
 get '/' do
