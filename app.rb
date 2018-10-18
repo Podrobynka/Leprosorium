@@ -66,8 +66,11 @@ end
 
 get '/details/:post_id' do
   post_id = params[:post_id]
+
   results = @db.execute 'select * from posts where id = ?', [post_id]
   @row = results[0]
+
+  @comments = @db.execute 'select * from comments where post_id = ? order by id', [post_id]
   erb :details
 end
 
@@ -75,11 +78,11 @@ post '/details/:post_id' do
   post_id = params[:post_id]
   comment = params[:comment]
 
-  # @db.execute %(
-  #   insert into
-  #   posts (created_date, comment)
-  #   values (datetime(), ?)
-  #   ), comment
+  @db.execute %(
+    insert into
+    comments (created_date, comment, post_id)
+    values (datetime(), ?, ?)
+    ), comment, post_id
 
-  erb "You typed comment #{comment} for post #{post_id}"
+  redirect to('/details/' + post_id)
 end
