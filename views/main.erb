@@ -4,7 +4,7 @@
 <p>
   <%= post["content"] %>
   <br>
-  Added at <%= post["created_date"] %>
+  <span style="font-size:75%; color: #999">Added by <%= post["author"] %> at <%= post["created_date"] %></span>
   <br>
   <a href="/details/<%= post['id'] %>">Comments</a>
 </p>

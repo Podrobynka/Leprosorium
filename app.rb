@@ -22,7 +22,8 @@ configure do
     (
       "id" INTEGER PRIMARY KEY AUTOINCREMENT,
       "created_date" DATE,
-      "content" TEXT
+      "content" TEXT,
+      "author" TEXT
     )
   )
 
@@ -49,6 +50,7 @@ end
 
 post '/new' do
   content = params[:content]
+  author = params[:author]
 
   if content.length <= 0
     @error = 'Type text'
@@ -57,9 +59,9 @@ post '/new' do
 
   @db.execute %(
     insert into
-    posts (created_date, content)
-    values (datetime(), ?)
-    ), content
+    posts (created_date, content, author)
+    values (datetime(), ?, ?)
+    ), content, author
 
   redirect to '/'
 end
