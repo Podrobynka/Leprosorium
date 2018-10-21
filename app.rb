@@ -18,8 +18,6 @@ end
 
 before do
   init_db
-  # @db.results_as_hash = true
-  # @posts = @db.execute 'select * from posts order by id desc'
 end
 
 configure do
@@ -61,10 +59,22 @@ post '/new' do
   content = params[:content]
   author = params[:author]
 
-  if content.length <= 0
-    @error = 'Type text'
-    return erb :new
+  hh = {
+    content: 'Type text',
+    author: 'Enter your name'
+  }
+
+  hh.each do |key, _value|
+    if params[key] == ''
+      @error = hh[key]
+      return erb :new
+    end
   end
+
+  # if content.length <= 0
+  #   @error = 'Type text'
+  #   return erb :new
+  # end
 
   @db.execute %(
     insert into
