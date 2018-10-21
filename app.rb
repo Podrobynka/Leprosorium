@@ -7,6 +7,15 @@ def init_db
   @db.results_as_hash = true
 end
 
+def getting_post
+  results = @db.execute 'select * from posts where id = ?', [@post_id]
+  @row = results[0]
+end
+
+def getting_comments
+  @comments = @db.execute 'select * from comments where post_id = ? order by id', [@post_id]
+end
+
 before do
   init_db
   # @db.results_as_hash = true
@@ -67,24 +76,31 @@ post '/new' do
 end
 
 get '/details/:post_id' do
-  post_id = params[:post_id]
+  @post_id = params[:post_id]
 
-  results = @db.execute 'select * from posts where id = ?', [post_id]
-  @row = results[0]
+  getting_post
+  getting_comments
 
-  @comments = @db.execute 'select * from comments where post_id = ? order by id', [post_id]
   erb :details
 end
 
 post '/details/:post_id' do
-  post_id = params[:post_id]
+  @post_id = params[:post_id]
   comment = params[:comment]
+
+  getting_post
+  getting_comments
+
+  if comment.length.zero?
+    @error = 'Type comment'
+    return erb :details
+  end
 
   @db.execute %(
     insert into
     comments (created_date, comment, post_id)
     values (datetime(), ?, ?)
-    ), comment, post_id
+    ), comment, @post_id
 
-  redirect to('/details/' + post_id)
+  redirect to('/details/' + @post_id)
 end
